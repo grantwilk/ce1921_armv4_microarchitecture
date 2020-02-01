@@ -1,0 +1,56 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity SEG7DECODE is
+	port (
+		-- INPUTS
+		NUM:	in	std_logic_vector(31 downto 0);
+		
+		-- OUTPUTS
+		SEG5:	out std_logic_vector(7 downto 0);
+		SEG4:	out std_logic_vector(7 downto 0);
+		SEG3:	out std_logic_vector(7 downto 0);
+		SEG2:	out std_logic_vector(7 downto 0);
+		SEG1:	out std_logic_vector(7 downto 0);
+		SEG0:	out std_logic_vector(7 downto 0)
+	);
+end entity;
+
+architecture DATAFLOW of SEG7DECODE
+
+	constant FONT_0:		std_logic_vector(7 downto 0) := B"10000001";
+	constant FONT_1:		std_logic_vector(7 downto 0) := B"11001111";
+	constant FONT_2:		std_logic_vector(7 downto 0) := B"10010010";
+	constant FONT_3:		std_logic_vector(7 downto 0) := B"10000110";
+	constant FONT_4:		std_logic_vector(7 downto 0) := B"11001100";
+	constant FONT_5:		std_logic_vector(7 downto 0) := B"10100100";
+	constant FONT_6:		std_logic_vector(7 downto 0) := B"10100000";
+	constant FONT_7:		std_logic_vector(7 downto 0) := B"10001111";
+	constant FONT_8:		std_logic_vector(7 downto 0) := B"10000000";
+	constant FONT_9:		std_logic_vector(7 downto 0) := B"10000100";
+	constant FONT_A:		std_logic_vector(7 downto 0) := B"10000010";
+	constant FONT_B:		std_logic_vector(7 downto 0) := B"11100000";
+	constant FONT_C:		std_logic_vector(7 downto 0) := B"10110001";
+	constant FONT_D:		std_logic_vector(7 downto 0) := B"11000010";
+	constant FONT_E:		std_logic_vector(7 downto 0) := B"10110000";
+	constant FONT_E:		std_logic_vector(7 downto 0) := B"10111000";
+	
+begin
+
+	with NUM(31 downto 28) select
+	SEG5 <= 	FONT_0 when X"0",
+				FONT_1 when X"1",
+				FONT_2 when X"2",
+				FONT_3 when X"3",
+				FONT_4 when X"4",
+				FONT_5 when X"5",
+				FONT_6 when X"6",
+				FONT_7 when X"7",
+				FONT_8 when X"8",
+				FONT_9 when X"9",
+				FONT_A when X"A",
+				FONT_B when X"B",
+				FONT_C when X"C",
+				FONT_D when X"D",
+				FONT_E when X"E",
+				FONT_F when others;

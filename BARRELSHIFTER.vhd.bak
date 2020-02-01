@@ -1,0 +1,32 @@
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+
+entity BARRELSHIFTER is
+	port(
+		-- INPUTS
+		IN_SRC2: in  std_logic_vector(31 downto 0);
+		ROTATE:	in  std_logic_vector(3 downto 0);
+		
+		-- OUTPUTS
+		OUT_SRC2:	out std_logic_vector(31 downto 0)
+	);
+end entity;
+
+
+architecture DATAFLOW of BARRELSHIFTER is
+
+	signal ROLL: integer range 0 to 31 := 0;
+	signal SRC_INT: bit_vector(31 downto 0);
+	
+
+begin
+
+	ROLL <= 2 * to_integer(unsigned(ROTATE));
+	
+	SRC_INT <= to_bitvector(IN_SRC2);
+	OUT_SRC2 <= to_stdlogicvector(SRC_INT ROR ROLL);
+	
+end architecture;

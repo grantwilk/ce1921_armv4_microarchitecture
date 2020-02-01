@@ -1,0 +1,63 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity ALU is
+	port(
+		-- INPUTS
+		A, B: in unsigned(31 downto 0);
+		ALUS:	in unsigned(2 downto 0);
+		
+		-- OUTPUTS
+		F:				out unsigned(31 downto 0);
+		C, V, N, Z:	out std_logic
+	);
+end entity;
+
+architecture DATAFLOW of ALU is
+
+	-- INTERNAL BUSES
+	signal AINT: unsigned(32 downto 0);
+	signal BINT: unsigned(32 downto 0);
+	signal FINT: unsigned(32 downto 0);
+	
+	-- FLAG SIGNALS
+	signal A31:  std_logic;
+	signal B31:  std_logic;
+	signal F31:  std_logic;
+
+begin
+
+	-- ASSIGN INTERNAL BUSES
+	AINT <= '0' & A;
+	BINT <= '0' & B;
+
+	-- ASSIGN FLAG SIGNALS
+	A31 <= AINT(31);
+	B31 <= BINT(31);
+	F31 <= FINT(31);
+	
+	-- ASSIGN OUTPUT
+	with ALUS select	
+	FINT <=	AINT + BINT 		when B"000", -- 0
+				AINT - BINT 		when B"001", -- 1
+				AINT and BINT  	when B"010", -- 2
+				AINT or  BINT  	when B"011", -- 3
+				AINT xor BINT  	when B"100", -- 4
+				AINT					when B"101", -- 5
+				BINT					when B"110", -- 6
+				'0' & X"00000001"	when others; -- 7 / OTHERS
+
+	-- OUTPUT RESULT		
+	F <= FINT(31 downto 0);
+	
+	-- OUTPUT FLAGS
+	C <= FINT(32);
+	V <= (not A31 and not B31 and F31) or (A31 and B31 and not F31) when ALUS = B"000" else
+		  (A31 and not B31 and not F31) or (not A31 and B31 and F31) when ALUS = B"001" else
+		  '0';
+	N <= FINT(31);
+	Z <= '1' when FINT(31 downto 0) = X"00000000" else '0';	
+	
+	
+end architecture;
